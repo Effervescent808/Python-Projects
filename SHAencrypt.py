@@ -6,13 +6,21 @@ print()
 print (os.getcwd())
 print()
 
+#account for non recognised files
+while True:
+    try:
+#get file input
+        Input = input('file:')
 #read contents of the file
-file = open('file.txt', 'rb')
-file2 = open('file.txt', 'r')
-contents = file.read()
-contents2 = file2.read()
-file.close()
-file2.close()
+        file = open(Input, 'rb')
+        file2 = open(Input, 'r')
+        contents = file.read()
+        contents2 = file2.read()
+        break
+    except FileNotFoundError:
+        print('File not found')
+        print()
+        
 
 #pull sha256
 hash = hashlib.sha256(contents).hexdigest()
@@ -63,6 +71,10 @@ plaintext = str(contents2)
 #use the cipher table
 ciphertext = rot_cipher(plaintext, rot)
 decoded_text = rot_cipher(ciphertext, -rot)
+
+#output to file "encrypted.txt"
+with open('encrypted.txt','w') as CoolBeans:
+    print(ciphertext, file=CoolBeans)
 
 #test prints
 print()
