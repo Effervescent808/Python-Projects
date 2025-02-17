@@ -2,9 +2,29 @@ import os
 import hashlib
 import string
 
+testmode = False
+
 print()
 print (os.getcwd())
 print()
+
+decrypt_mode = False
+encrypt_mode = False
+
+while True:
+    try:
+        mode = input('(d/e) mode?:')
+        if mode == 'd':
+            decrypt_mode = True
+            break
+        elif mode == 'e':
+            encrypt_mode = True
+            break
+        else: 
+            print('unknown input')
+    except ValueError:
+          print('unknown input')
+
 
 #account for non recognised files
 while True:
@@ -23,8 +43,15 @@ while True:
         
 
 #pull sha256
-hash = hashlib.sha256(contents).hexdigest()
-print('Key:',hash)
+if encrypt_mode == True:
+    hash = hashlib.sha256(contents).hexdigest()
+    print()
+    print('Key:',hash)
+    print()
+
+#ask for key
+if decrypt_mode == True:
+    hash = input('key:')
 
 #create letter to value table
 values = dict()
@@ -68,23 +95,40 @@ def rot_cipher(text, shift):
 
 plaintext = str(contents2)
 
-#use the cipher table
+#use the cipher table for encoding
 ciphertext = rot_cipher(plaintext, rot)
-decoded_text = rot_cipher(ciphertext, -rot)
+
+#use the cipher table for decoding
+decoded_text = rot_cipher(plaintext, -rot)
 
 #output to file "encrypted.txt"
-with open('encrypted.txt','w') as CoolBeans:
-    print(ciphertext, file=CoolBeans)
+if encrypt_mode == True:
+    with open('encrypted.txt','w') as CoolBeans:
+        print(ciphertext, file=CoolBeans)
+
+#output to file "decrypted.txt"
+if decrypt_mode == True:
+    with open('decrypted.txt','w') as CoolBeans1:
+        print(decoded_text, file=CoolBeans1)
+
+#prints
+if decrypt_mode == True:
+    print()
+    print('file successfully decrypted')
+
+if encrypt_mode == True:
+    print('file encrypted successfully')
 
 #test prints
-print()
-print(key)
-print()
-print(key1, key2)
-print()
-print(sum_key1, sum_key2)
-print()
-print(rot)
-print()
-print('Ciphertext:',ciphertext)
-print('Decoded_text:',decoded_text)
+if testmode == True:
+    print()
+    print(key)
+    print()
+    print(key1, key2)
+    print()
+    print(sum_key1, sum_key2)
+    print()
+    print(rot)
+    print()
+    print('Ciphertext:',ciphertext)
+    print('Decoded_text:',decoded_text)
